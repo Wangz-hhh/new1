@@ -13,8 +13,13 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # 创建线性回归模型
 model = LinearRegression()
 
-# 训练模型
-model.fit(X_train, y_train)
+# 训练模型并记录损失
+losses = []
+for _ in range(100):  # 进行多次迭代以模拟训练过程
+    model.fit(X_train, y_train)
+    y_pred_train = model.predict(X_train)
+    loss = np.mean((y_train - y_pred_train) ** 2)  # 均方误差
+    losses.append(loss)
 
 # 进行预测
 y_pred = model.predict(X_test)
@@ -25,4 +30,23 @@ plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', li
 plt.title('Multiple Variable Linear Regression')
 plt.xlabel('Actual y')
 plt.ylabel('Predicted y')
+plt.show()
+
+# 可视化损失
+plt.plot(losses, color='green')
+plt.title('Loss over Iterations')
+plt.xlabel('Iteration')
+plt.ylabel('Loss (MSE)')
+plt.show()
+
+# 可视化权重和偏置
+weights = model.coef_
+bias = model.intercept_
+
+plt.bar(range(len(weights)), weights, color='orange', label='Weights')
+plt.axhline(y=bias, color='red', linestyle='--', label='Bias')
+plt.title('Weights and Bias')
+plt.xlabel('Feature Index')
+plt.ylabel('Value')
+plt.legend()
 plt.show()
